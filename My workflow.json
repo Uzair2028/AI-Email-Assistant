@@ -1,0 +1,144 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "maxResults": 1,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a9778356-a2c5-471e-ae40-1c90c975b970",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gnrvwPjWSRPc79q8",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional AI Email Assistant.\n\nRead the following email and write a professional, polite, and helpful reply.\n\nSubject:\n{{ $('Gmail Trigger').item.json.snippet }}\n\nEmail Content:\n{{ $('Gmail Trigger').item.json.snippet }}\n\nReturn only the email reply. Do not include explanations or markdown.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d87ea5e3-43d8-44e6-8d6a-0c57043dcdd5",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 2048
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "0caf798b-9cca-433b-91c7-959ced4edd42",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ua868603@gmail.com",
+        "subject": "Test Email",
+        "emailType": "text",
+        "message": "=\nSubject: Re: Job opportunities tailored to your profile\n\nDear Jobrapido Team,\n\nThank you for reaching out and sharing these curated job\nopportunities. I appreciate your HR consultant taking the time to\nselect roles that align with my professional background and interest\nin flexible, part-time work.\n\nI will review the matches you have provided. Could you please let me\nknow if there are specific next steps I should take for the most\npromising leads, or if you require an updated version of my CV to\nshare with potential employers?\n\nI look forward to your guidance.\n\nBest regards,\n\n[Your Name]\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "5f194182-aabe-4a73-bc97-7200ba7ea6ba",
+      "name": "Send a message",
+      "webhookId": "2a426756-8989-407e-aa58-3c1ddc324947",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gnrvwPjWSRPc79q8",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c5dd4086-d6c2-480a-9338-83297f65d512",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e64114cb38c9fc615f35e5a7d90dc7d901542c466217e35b4f5aa1bce78d4bb8"
+  },
+  "nodeGroups": [],
+  "id": "ZqHnu9xeUHMdqUS0",
+  "tags": []
+}
